@@ -1,0 +1,56 @@
+#Install Environment on EC2
+- Git (yum install git)
+- Docker (yum install docker)
+- docker-compose (https://docs.docker.com/compose/install/)
+- mysql (yum install mysql)
+- Nodejs (https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-up-node-on-ec2-instance.html)
+- nodemon (npm install -g nodemon)
+- kubectl (https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html)
+- eksctl (https://docs.aws.amazon.com/eks/latest/userguide/eksctl.html)
+- helm (https://docs.aws.amazon.com/eks/latest/userguide/helm.html)
+
+###AWS EKS
+0. Create an IAM Role and attach it to EC2 instance
+- IAM
+- EC2
+- CloudFormation
+
+1. Create cluster 
+- eksctl create cluster --name datlee152 \
+  --region ap-southeast-1 \
+  --node-type t2.small
+
+2. Delete cluster
+- eksctl delete cluster datlee152 --region ap-southeast-1
+
+### TLS-enabled Kubernetes clusters
+0. Pre-requisites 
+- AWS cli 
+- eksctl
+- kubectl 
+- helm 
+- eks cluster 
+- R53 domain
+
+1. Install nginx ingress controller 
+- https://kubernetes.github.io/ingress-nginx/deploy/#aws
+- Check: kubectl get service -n ingress-nginx
+- minikube addons enable ingress(local development)
+
+2. Congifure DNS record 
+- Use Route53
+
+3. Install cert-manager (https://cert-manager.io/docs/installation/helm/)
+- helm repo add jetstack https://charts.jetstack.io
+- helm repo update
+- kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.6.1/cert-manager.crds.yaml
+- helm install \
+  cert-manager jetstack/cert-manager \
+  --namespace cert-manager \
+  --create-namespace \
+  --version v1.6.1 
+
+4. Create issuer and certificate
+- Check: kubectl get certificates
+- Check: kubectl describe certificates
+

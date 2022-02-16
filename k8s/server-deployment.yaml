@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: server-deploymnet
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      component: server
+  template:
+    metadata:
+      labels:
+        component: server
+    spec:
+      containers:
+        - name: server
+          image: letiendat152/devops-server
+          ports:
+            - containerPort: 4000
+          env:
+            - name: DB_HOST
+              value: mysql-cluster-ip-service 
+            - name: DATABASE_NAME
+              value: dblinks
+            - name: DATABASE_USER
+              value: user
+            - name: DATABASE_PASSWORD
+              value: mypassword
+                

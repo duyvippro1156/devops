@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+  app:
+    build:
+      dockerfile: Dockerfile
+      context: ./
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/app
+    environment:
+      - NODE_ENV=development
+      - DATABASE_HOST=db
+      - DATABASE_USER=user
+      - DATABASE_PASSWORD=mypassword
+      - DATABASE_NAME=dblinks
+  db:
+    image: mysql:5.7
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    logging:
+      driver: none
+    environment:
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=mypassword
+      - MYSQL_ROOT_PASSWORD=mypassword
+      - MYSQL_DATABASE=dblinks
