@@ -5,7 +5,8 @@ import { database } from "./config";
 const pool = mysql.createPool(database);
 
 pool.getConnection((err, connection) => {
-  if (err) {
+  try{
+    if (err) {
     if (err.code === "PROTOCOL_CONNECTION_LOST") {
       console.error("Database connection was closed.");
     }
@@ -16,11 +17,14 @@ pool.getConnection((err, connection) => {
       console.error("Database connection was refused");
     }
   }
+    if (connection) connection.release();
+    console.log("DB is Connected");
 
-  if (connection) connection.release();
-  console.log("DB is Connected");
-
-  return;
+    return;
+  }catch(e){
+    console.log(e);
+  }
+  
 });
 
 export default pool;

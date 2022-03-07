@@ -1,3 +1,8 @@
 export const renderIndex = (req, res) => {
-  res.render("index");
+  try{
+    res.render("index");
+  }catch(e){
+    console.log(e);
+  }
+  
 };

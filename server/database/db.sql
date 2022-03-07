@@ -1,7 +1,5 @@
 CREATE DATABASE IF NOT EXISTS dblinks;
-
 USE dblinks;
-
 -- TABLE USER
 -- all pasword wil be encrypted using SHA2
 CREATE TABLE users (
@@ -11,9 +9,7 @@ CREATE TABLE users (
   fullname VARCHAR(100) NOT NULL,
   PRIMARY KEY (id)
 ) AUTO_INCREMENT=2;
-
 -- drop table users
-
 DESCRIBE users;
 
 INSERT INTO users (id, username, password, fullname) 
@@ -31,11 +27,8 @@ CREATE TABLE links (
   created_at timestamp NOT NULL DEFAULT current_timestamp,
   CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id)
 );
-
 ALTER TABLE links
   ADD PRIMARY KEY (id);
-
 ALTER TABLE links
   MODIFY id INT(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT = 2;
-
 DESCRIBE links;

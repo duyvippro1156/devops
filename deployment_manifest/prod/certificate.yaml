@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: blockchaintutorial-org-tls
+spec:
+  secretName: blockchaintutorial-org
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: blockchaintutorial.org
+  dnsNames:
+    - blockchaintutorial.org
+    - www.blockchaintutorial.org

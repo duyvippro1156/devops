@@ -1,3 +1,8 @@
 export const renderUserProfile = (req, res, next) => {
-  res.render("profile");
+  try{
+    res.render("profile");
+  }catch(e){
+    console.log(e);
+  }
+  
 };

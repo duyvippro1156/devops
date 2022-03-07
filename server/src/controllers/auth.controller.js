@@ -1,17 +1,25 @@
 import passport from "passport";
 
 export const renderSignUp = (req, res) => {
-  res.render("auth/signup");
+  try{
+    res.render("auth/signup");
+  }catch(e){
+    console.log(e);
+  }
 };
 
 export const signUp = passport.authenticate("local.signup", {
-  successRedirect: "/profile",
-  failureRedirect: "/signup",
-  failureFlash: true,
+    successRedirect: "/profile",
+    failureRedirect: "/signup",
+    failureFlash: true,
 });
 
 export const renderSignIn = (req, res, next) => {
-  res.render("auth/signin");
+  try{
+    res.render("auth/signin");
+  }catch(e){
+    console.log(e);
+  }
 };
 
 export const signIn = passport.authenticate("local.signin", {

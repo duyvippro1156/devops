@@ -1,5 +1,6 @@
 version: "3.8"
 services:
+
   app:
     build:
       dockerfile: Dockerfile
@@ -7,6 +8,7 @@ services:
     ports:
       - "4000:4000"
     volumes:
+      - /app/node_modules
       - .:/app
     environment:
       - NODE_ENV=development
@@ -14,6 +16,7 @@ services:
       - DATABASE_USER=user
       - DATABASE_PASSWORD=mypassword
       - DATABASE_NAME=dblinks
+      
   db:
     image: mysql:5.7
     container_name: mysql

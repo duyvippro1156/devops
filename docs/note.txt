@@ -1,10 +1,9 @@
-#Install Environment on EC2
+###Install Environment on EC2
 - Git (yum install git)
 - Docker (yum install docker)
 - docker-compose (https://docs.docker.com/compose/install/)
-- mysql (yum install mysql)
+- jenkins (https://www.jenkins.io/download/)
 - Nodejs (https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-up-node-on-ec2-instance.html)
-- nodemon (npm install -g nodemon)
 - kubectl (https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html)
 - eksctl (https://docs.aws.amazon.com/eks/latest/userguide/eksctl.html)
 - helm (https://docs.aws.amazon.com/eks/latest/userguide/helm.html)
@@ -15,29 +14,56 @@
 - EC2
 - CloudFormation
 
-1. Create cluster 
-- eksctl create cluster --name datlee152 \
+1. Create cluster
+- eksctl create cluster \
+  --name mini-project \
+  --version 1.20 \
   --region ap-southeast-1 \
-  --node-type t2.small
+  --nodegroup-name workers \
+  --node-type t3.medium \
+  --nodes 2 \
+  --nodes-min 1 \
+  --nodes-max 4 \
+  --ssh-access \
+  --ssh-public-key ~/.ssh/id_rsa.pub \
+  --managed
 
 2. Delete cluster
-- eksctl delete cluster datlee152 --region ap-southeast-1
+- eksctl delete cluster mini-project  --region ap-southeast-1
+
+###Deploy Kuberenetes Dashboard
+Refs: 
+- https://kubernetes.github.io/dashboard/
+- https://docs.aws.amazon.com/eks/latest/userguide/dashboard-tutorial.html
+
+1. Install Metrics Server first so Dashboard can poll metrics
+- kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.3.6/components.yaml
+- Check metrics-server deployment: kubectl get deployment metrics-server -n kube-system
+
+2. Install Dashboard v2.0.0
+- ref:
+  - https://stackoverflow.com/questions/39864385/how-to-access-expose-kubernetes-dashboard-service-outside-of-a-cluster
+  
+- kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta8/aio/deploy/recommended.yaml
+- kubectl patch svc kubernetes-dashboard -n kubernetes-dashboard  -p '{"spec": {"type": "LoadBalancer"}}'
+- kubectl -n kubernetes-dashboard edit service kubernetes-dashboard
+- access this url from browser: https://github.com/kubernetes/dashboard/blob/master/docs/user/accessing-dashboard/README.md
 
 ### TLS-enabled Kubernetes clusters
-0. Pre-requisites 
-- AWS cli 
+0. Pre-requisites
+- AWS cli
 - eksctl
-- kubectl 
-- helm 
-- eks cluster 
+- kubectl
+- helm
+- eks cluster
 - R53 domain
 
-1. Install nginx ingress controller 
+1. Install nginx ingress controller
 - https://kubernetes.github.io/ingress-nginx/deploy/#aws
 - Check: kubectl get service -n ingress-nginx
 - minikube addons enable ingress(local development)
 
-2. Congifure DNS record 
+2. Congifure DNS record
 - Use Route53
 
 3. Install cert-manager (https://cert-manager.io/docs/installation/helm/)
@@ -48,9 +74,9 @@
   cert-manager jetstack/cert-manager \
   --namespace cert-manager \
   --create-namespace \
-  --version v1.6.1 
+  --version v1.6.1
+
 
 4. Create issuer and certificate
 - Check: kubectl get certificates
 - Check: kubectl describe certificates
-

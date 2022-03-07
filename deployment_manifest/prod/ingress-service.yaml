@@ -1,0 +1,57 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    kubernetes.io/ingress.class: 'nginx'
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    cert-manager.io/cluster-issuer: 'letsencrypt-prod'
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+spec:
+  tls:
+    - hosts:
+        - blockchaintutorial.org
+        - www.blockchaintutorial.org
+      secretName: blockchaintutorial-org
+  rules:
+    - host: blockchaintutorial.org
+      http:
+        paths:
+        - path: /?(.*)
+          pathType: Prefix
+          backend:
+            service:
+              name: server-cluster-ip-service
+              port:
+                number: 4000
+    - host: www.blockchaintutorial.org
+      http:
+        paths:
+        - path: /?(.*)
+          pathType: Prefix
+          backend:
+            service:
+              name: server-cluster-ip-service
+              port:
+                number: 4000
+
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: ingress-service
+#   annotations:
+#     kubernetes.io/ingress.class: 'nginx'
+#     nginx.ingress.kubernetes.io/use-regex: 'true'
+#     nginx.ingress.kubernetes.io/rewrite-target: /$1
+# spec:
+#   rules:
+#     - http:
+#         paths:
+#         - path: /?(.*)
+#           pathType: Prefix
+#           backend:
+#             service:
+#               name: server-cluster-ip-service
+#               port:
+#                 number: 4000
